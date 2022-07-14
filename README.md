@@ -2,7 +2,7 @@
 
 Pull the latest container from quay.io:
 
-`podman pull quay.io/rhn_support_aireilly/telco-411-preview-docs:latest`
+`$ podman pull quay.io/rhn_support_aireilly/telco-411-preview-docs:latest`
 
 Run the container:
 
