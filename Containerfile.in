@@ -28,4 +28,4 @@ RUN mv index.html /var/www/html
 
 RUN cp -r /openshift-docs/_preview/openshift-enterprise/td-470/* /var/www/html
 
-CMD [ "/sbin/init" ]
+CMD ["httpd", "-DFOREGROUND"]
