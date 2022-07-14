@@ -12,7 +12,7 @@ RUN mkdir /etc/systemd/system/httpd.service.d/; echo -e '[Service]\nRestart=alwa
 
 EXPOSE 80
 
-RUN git clone -b td-470 https://<accesskey>@github.com/aireilly/openshift-docs.git /openshift-docs
+RUN git clone -b td-470 https://github.com/aireilly/openshift-docs.git /openshift-docs
 
 RUN cd /openshift-docs
 
