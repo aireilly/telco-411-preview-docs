@@ -24,7 +24,7 @@ RUN touch index.html
 
 RUN echo '<head><meta http-equiv="refresh" content="1; URL=./welcome/index.html" /></head><body><p>If you are not redirected in one second, <a href="./welcome/index.html">click here</a>.</p></body>' > index.html
 
-RUN mv index.html /openshift-docs/_preview/index.html
+RUN mv index.html /var/www/html
 
 RUN cp -r /openshift-docs/_preview/openshift-enterprise/td-470/* /var/www/html
 
