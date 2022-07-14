@@ -1,31 +1,19 @@
 FROM registry.access.redhat.com/ubi8/ruby-27
 
 ENV LANG=en_US.UTF-8
-
 USER root
-
 RUN yum -y update
-
 RUN gem install listen:3.0.8 ascii_binder && yum clean all
 
 RUN yum -y install httpd; yum clean all; systemctl enable httpd;
-
 RUN mkdir /etc/systemd/system/httpd.service.d/; echo -e '[Service]\nRestart=always' > /etc/systemd/system/httpd.service.d/httpd.conf
-
 EXPOSE 80
 
 RUN git clone -b td-470 https://github.com/aireilly/openshift-docs.git /openshift-docs
-
 RUN cd /openshift-docs
-
 RUN asciibinder build /openshift-docs
-
 RUN touch index.html
-
 RUN echo '<head><meta http-equiv="refresh" content="1; URL=./welcome/index.html" /></head><body><p>If you are not redirected in one second, <a href="./welcome/index.html">click here</a>.</p></body>' > index.html
-
 RUN mv index.html /openshift-docs/_preview/openshift-enterprise/td-470/index.html 
-
-RUN cp -r /openshift-docs/_preview/openshift-enterprise/td-470/* /var/www/html
-
+RUN cp -r /openshift-docs/_preview/openshift-enterprise/td-470 /var/www/html
 CMD [ "/sbin/init" ]
