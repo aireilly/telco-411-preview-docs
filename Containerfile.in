@@ -26,6 +26,6 @@ RUN echo '<head><meta http-equiv="refresh" content="1; URL=./welcome/index.html"
 
 RUN mv index.html /openshift-docs/_preview/index.html
 
-RUN cp -r /openshift-docs/_preview/openshift-enterprise/td-470/ /var/www/html
+RUN cp -r /openshift-docs/_preview/openshift-enterprise/td-470/* /var/www/html
 
 CMD [ "/sbin/init" ]
