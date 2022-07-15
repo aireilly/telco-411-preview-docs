@@ -1,29 +1,19 @@
-FROM registry.redhat.io/ubi7/ubi
-
-RUN yum -y install --disableplugin=subscription-manager httpd24 && yum --disableplugin=subscription-manager clean all
-
-RUN sed -i 's/Listen 80/Listen 8080/' \
-  /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf \
-  && chgrp -R 0 /var/log/httpd24 /opt/rh/httpd24/root/var/run/httpd \
-  && chmod -R g=u /var/log/httpd24 /opt/rh/httpd24/root/var/run/httpd
-
-EXPOSE 8080
-USER 1001
-CMD scl enable httpd24 -- httpd -D FOREGROUND
-
-FROM registry.access.redhat.com/ubi8/ruby-27
+FROM registry.access.redhat.com/ubi8/ruby-27 AS build
 ENV LANG=en_US.UTF-8
 USER root
 RUN yum -y update
 RUN gem install ascii_binder && yum clean all
-RUN yum -y install git; yum clean all
-
 RUN git clone -b td-470 https://github.com/aireilly/openshift-docs.git /openshift-docs
 RUN cd /openshift-docs
 RUN asciibinder build /openshift-docs
 RUN touch index.html
 RUN echo '<head><meta http-equiv="refresh" content="1; URL=./welcome/index.html" /></head><body><p>If you are not redirected in one second, <a href="./welcome/index.html">click here</a>.</p></body>' > index.html
 RUN mv index.html /openshift-docs/_preview/openshift-enterprise/td-470/index.html
-RUN cp -r '/openshift-docs/_preview/openshift-enterprise/td-470/'* /var/www/html
 
+FROM registry.access.redhat.com/ubi8/ubi-init AS server
+RUN yum update
+RUN yum -y install httpd; yum clean all; systemctl enable httpd; 
+RUN mkdir /etc/systemd/system/httpd.service.d/; echo -e '[Service]\nRestart=always' > /etc/systemd/system/httpd.service.d/httpd.conf
+EXPOSE 80
+COPY --from=build '/openshift-docs/_preview/openshift-enterprise/td-470/'* /var/www/html
 CMD [ "/sbin/init" ]
