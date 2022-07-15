@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/ruby-27 AS build
+FROM registry.access.redhat.com/ubi8/ruby-27 AS builder
 ENV LANG=en_US.UTF-8
 USER root
 RUN yum -y update
@@ -15,5 +15,5 @@ RUN yum update
 RUN yum -y install httpd; yum clean all; systemctl enable httpd; 
 RUN mkdir /etc/systemd/system/httpd.service.d/; echo -e '[Service]\nRestart=always' > /etc/systemd/system/httpd.service.d/httpd.conf
 EXPOSE 80
-COPY --from=build '/openshift-docs/_preview/openshift-enterprise/td-470/'* /var/www/html
+COPY --from=builder '/openshift-docs/_preview/openshift-enterprise/td-470/'* /var/www/html
 CMD [ "/sbin/init" ]
