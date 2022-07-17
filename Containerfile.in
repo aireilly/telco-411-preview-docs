@@ -10,13 +10,9 @@ RUN touch index.html
 RUN echo '<head><meta http-equiv="refresh" content="1; URL=./welcome/index.html" /></head><body><p>If you are not redirected in one second, <a href="./welcome/index.html">click here</a>.</p></body>' > index.html
 RUN mv index.html /openshift-docs/_preview/openshift-enterprise/td-470/index.html
 
-FROM registry.access.redhat.com/ubi8/ubi-init AS server
-RUN yum update
-RUN yum -y install httpd; yum clean all; systemctl enable httpd; 
-RUN mkdir /etc/systemd/system/httpd.service.d/; echo -e '[Service]\nRestart=always' > /etc/systemd/system/httpd.service.d/httpd.conf
-EXPOSE 80
-
+FROM registry.redhat.io/rhel8/httpd-24 AS server
 COPY --from=builder '/openshift-docs/_preview/openshift-enterprise/td-470/'* /var/www/html
 RUN rm -rf /openshift-docs
+CMD run-httpd
 
 CMD [ "/sbin/init" ]
