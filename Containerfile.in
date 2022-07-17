@@ -6,6 +6,10 @@ RUN gem install ascii_binder:1.0 yajl-ruby:1.4.1 && yum clean all
 RUN mkdir /etc/systemd/system/httpd.service.d/; echo -e '[Service]\nRestart=always' > /etc/systemd/system/httpd.service.d/httpd.conf
 EXPOSE 80
 
+WORKDIR /
+ENV LANG=en_US.UTF-8
+USER root
+
 RUN git clone -b td-470 https://github.com/aireilly/openshift-docs.git
 RUN cd /openshift-docs; asciibinder build -d openshift-enterprise
 RUN touch index.html
