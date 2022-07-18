@@ -10,9 +10,9 @@ RUN touch index.html
 RUN echo '<head><meta http-equiv="refresh" content="1; URL=./welcome/index.html" /></head><body><p>If you are not redirected in one second, <a href="./welcome/index.html">click here</a>.</p></body>' > index.html
 RUN mv index.html /var/www/html/index.html
 
-RUN git clone -b td-470 --single-branch https://github.com/aireilly/openshift-docs.git
-RUN cd openshift-docs; asciibinder build -d openshift-enterprise
-RUN mv 'openshift-docs/_preview/openshift-enterprise/td-470/'* /var/www/html
+RUN git clone -b nokia-preview --single-branch https://github.com/aireilly/openshift-docs.git
+RUN cd openshift-docs; asciibinder build -d openshift-webscale
+RUN mv 'openshift-docs/_preview/openshift-enterprise/nokia-preview/'* /var/www/html
 RUN rm -rf openshift-docs
 
 CMD [ "/sbin/init" ]
