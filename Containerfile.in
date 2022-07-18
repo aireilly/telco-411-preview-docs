@@ -1,15 +1,11 @@
-FROM registry.access.redhat.com/ubi8/ubi-init
-RUN yum update
-RUN yum -y install git ruby ruby-devel rubygems gcc gcc-c++ make redhat-rpm-config httpd; yum clean all
+FROM registry.access.redhat.com/ubi9/ubi-init
+RUN yum update -y
+RUN yum -y install git ruby ruby-devel rubygems gcc gcc-c++ make redhat-rpm-config httpd rubygem-rexml langpacks-en glibc-all-langpacks; yum clean all
 RUN systemctl enable httpd
-RUN gem install ascii_binder:1.0 yajl-ruby:1.4.1 && yum clean all
+RUN gem install ascii_binder && yum clean all
 RUN mkdir /etc/systemd/system/httpd.service.d/; echo -e '[Service]\nRestart=always' > /etc/systemd/system/httpd.service.d/httpd.conf
 EXPOSE 80
-
-WORKDIR /
 ENV LANG=en_US.UTF-8
-USER root
-
 RUN touch index.html
 RUN echo '<head><meta http-equiv="refresh" content="1; URL=./welcome/index.html" /></head><body><p>If you are not redirected in one second, <a href="./welcome/index.html">click here</a>.</p></body>' > index.html
 RUN mv index.html /var/www/html/index.html
