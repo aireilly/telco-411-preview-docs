@@ -6,13 +6,16 @@ RUN gem install ascii_binder && yum clean all
 RUN mkdir /etc/systemd/system/httpd.service.d/; echo -e '[Service]\nRestart=always' > /etc/systemd/system/httpd.service.d/httpd.conf
 EXPOSE 80
 ENV LANG=en_US.UTF-8
+#create a top level index redirect
 RUN touch index.html
 RUN echo '<head><meta http-equiv="refresh" content="1; URL=./welcome/index.html" /></head><body><p>If you are not redirected in one second, <a href="./welcome/index.html">click here</a>.</p></body>' > index.html
 RUN mv index.html /var/www/html/index.html
-
+#clone the branch
 RUN git clone -b nokia-preview --single-branch https://github.com/aireilly/openshift-docs.git
 RUN cd openshift-docs; asciibinder build -d openshift-webscale
-RUN mv 'openshift-docs/_preview/openshift-enterprise/nokia-preview/'* /var/www/html
+#hack to adjust the output html product version
+RUN cd openshift-docs/_preview; grep -rlZ 'Branch Build' . | xargs -0 sed -i 's/Branch Build/4.11/g'
+#make sure the correct distro is set
+RUN mv 'openshift-docs/_preview/openshift-webscale/nokia-preview/'* /var/www/html
 RUN rm -rf openshift-docs
-
 CMD [ "/sbin/init" ]
