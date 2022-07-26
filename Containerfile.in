@@ -1,4 +1,5 @@
 FROM registry.access.redhat.com/ubi9/ubi-init
+WORKDIR /
 RUN yum update -y
 RUN yum -y install git ruby ruby-devel rubygems gcc gcc-c++ make redhat-rpm-config httpd rubygem-rexml langpacks-en glibc-all-langpacks; yum clean all
 RUN systemctl enable httpd
