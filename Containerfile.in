@@ -12,7 +12,7 @@ RUN touch index.html
 RUN echo '<head><meta http-equiv="refresh" content="1; URL=./welcome/index.html" /></head><body><p>If you are not redirected in one second, <a href="./welcome/index.html">click here</a>.</p></body>' > index.html
 RUN mv index.html /var/www/html/index.html
 #clone the branch and build
-RUN git clone -b nokia-preview --single-branch https://github.com/aireilly/openshift-docs.git
+RUN git clone -b nokia-preview --single-branch --depth 1 https://github.com/aireilly/openshift-docs.git
 RUN cd openshift-docs; asciibinder build -d openshift-webscale
 #hack to adjust the output html product version
 RUN cd openshift-docs/_preview; grep -rlZ 'Branch Build' . | xargs -0 sed -i 's/Branch Build/4.11/g'
